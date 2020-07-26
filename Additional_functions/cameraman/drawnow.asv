@@ -1,5 +1,0 @@
-function drawnow()
-    builtin('drawnow', [])
-    whichOne = reWriter.setgetWhichOne;
-    reWriter.setgetWhichOne(whichOne);
-end

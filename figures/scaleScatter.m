@@ -1,6 +1,5 @@
 function [f, ax] = scaleScatter(x, y, r, color, xoryscale)
-%SCALESCATTER Scatter the specified points so that their radisu scales with
-%the axes
+%SCALESCATTER Scatter the specified points so that their radius scales with the axes
     if nargin < 4
         color = 'k';
     end
@@ -36,4 +35,3 @@ function [f, ax] = scaleScatter(x, y, r, color, xoryscale)
     ax.XLim = xli;
     ax.YLim = yli;
 end
-
