@@ -1,0 +1,9 @@
+*.asv
+*.mat
+*.xlsx
+*.csv
+*.xls
+*.mex
+*.autosave
+**/results/**
+**/Data/**
