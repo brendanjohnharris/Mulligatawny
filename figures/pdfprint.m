@@ -3,10 +3,12 @@ function pdfprint(varargin)
 % Same arguments as print. Of course, it works with other file formats as well.
     warning('off', 'MATLAB:print:FigureTooLargeForPage')
     h = gcf;
+    units = h.Units;
     set(h,'Units','Centimeters');
     pos = get(h,'Position');
     set(h,'PaperPositionMode','Auto','PaperUnits','Centimeters','PaperSize',[pos(3), pos(4)])
     print(varargin{:})
+    set(h,'Units',units);
     warning('on', 'MATLAB:print:FigureTooLargeForPage')
 end
 
