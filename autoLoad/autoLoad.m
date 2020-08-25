@@ -53,7 +53,7 @@ function varargout = autoLoad(filePath)
         end
     end
     varargout = fout;
-    if nargout <= 1 && length(fout) > 1 % You don't know how many arguments to expect, so give them all as a cell
+    if nargout <= 1 && length(fout) > 1 % You don't know how many arguments to expect, so give them all as a struct
         if ~strcmp(filePath(end-3:end), '.mat')
             fid = fopen([f, '.m']);
             outNames = fgetl(fid);
@@ -62,6 +62,6 @@ function varargout = autoLoad(filePath)
             outNames = regexprep(outNames, '\s', '');
             outNames = strsplit(outNames{1}, ',');
         end
-        varargout = {cell2table(fout', 'VariableNames', outNames)};
+        varargout = {cell2struct(fout, outNames)};
     end
 end
