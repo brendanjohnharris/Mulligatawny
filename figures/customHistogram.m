@@ -21,17 +21,28 @@ function [origy, BinEdges] = customHistogram(X, BinEdges, cutoff, fillit, theCol
     if nargin < 3
         cutoff = [];
     end
-    if iscell(X) && isscalar(cutoff)
-        cutoff = repmat(cutoff, 1, length(X));
-    end
     if nargin < 4 || isempty(fillit)
         fillit = 0;
     end
+    if nargin < 5
+        theColor = [];
+    end
+    if ischar(cutoff) || (~iscell(X) && ~isscalar(cutoff)) && isempty(theColor)
+        theColor = cutoff;
+        cutoff = [];
+    elseif ischar(fillit) || ~isscalar(fillit) && isempty(theColor)
+        theColor = fillit;
+        fillit = [];
+    end
+    if iscell(X) && isscalar(cutoff)
+        cutoff = repmat(cutoff, 1, length(X));
+    end
+    
     ax = gca;
     set(gcf, 'color', 'w')
     hold on
     for i = 1:length(X)
-        if nargin < 5 || isempty(theColor)
+        if isempty(theColor)
             theColor = ax.ColorOrder(ax.ColorOrderIndex, :);
             advanceCO = 1;
         else
