@@ -53,7 +53,10 @@ function varargout = autoLoad(filePath)
         end
     end
     varargout = fout;
-    if nargout <= 1 && length(fout) > 1 % You don't know how many arguments to expect, so give them all as a struct
+    if nargout <= 1 && length(fout) > 1 % You don't know how many arguments to expect, so give them all as a struct. 
+                                        % Reproduces conventional load()
+                                        % functionality if number of
+                                        % variabels in the file is greater than 1.
         if ~strcmp(filePath(end-3:end), '.mat')
             fid = fopen([f, '.m']);
             outNames = fgetl(fid);
