@@ -16,7 +16,7 @@ function [y, mu, sd] = sigmoid(x, mu, sd, func)
         func = 'tanh';
     end
     if sd == false % i.e. don't take SD from data
-        sd == 1;
+        sd = 1;
     end
     if isscalar(func) && func >= 0.5
         func = 'logistic';
@@ -40,4 +40,3 @@ function [y, mu, sd] = sigmoid(x, mu, sd, func)
         y = y';
     end
 end
-
