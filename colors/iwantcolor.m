@@ -12,9 +12,9 @@ function c = iwantcolor(N, Nselect, testPlot)
     end
     if ischar(N) % How are you feleeling?
         switch lower(N)
-            case 'red'
-                c = [ 0.3020    0.6863    0.2902];
             case 'green'
+                c = [ 0.3020    0.6863    0.2902];
+            case 'red'
                 c = [0.8941    0.1020    0.1098];
             case 'goodbad'
                 c = [iwantcolor('green'); iwantcolor('red')];
@@ -183,7 +183,10 @@ function c = iwantcolor(N, Nselect, testPlot)
                 c = iwantcolor('default');
         end
     end
-    c = repmat(c, 100, 1); % You can't want this many?! You'll have to deal with repeats
+    if ~isempty(Nselect)
+        c = repmat(c, 100, 1);
+        c = c(1:Nselect, :);
+    end
     
     if testPlot
         hold on
@@ -193,8 +196,4 @@ function c = iwantcolor(N, Nselect, testPlot)
         end
         hold off
     end
-    if ~isempty(Nselect)
-        c = c(1:Nselect, :);
-    end
 end
-
