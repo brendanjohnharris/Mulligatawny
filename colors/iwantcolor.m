@@ -12,6 +12,9 @@ function c = iwantcolor(N, Nselect, testPlot)
     end
     if ischar(N) % How are you feleeling?
         switch lower(N)
+            case {'k', 'r', 'g', 'y', 'b', 'm', 'c', 'w'}
+                c = bitget(find('krgybmcw'==N)-1,1:3);
+                % https://stackoverflow.com/questions/4922383/how-can-i-convert-a-color-name-to-a-3-element-rgb-vector
             case 'green'
                 c = [ 0.3020    0.6863    0.2902];
             case 'red'
@@ -49,7 +52,7 @@ function c = iwantcolor(N, Nselect, testPlot)
                     163,97,199;...
                     154,150,63;...
                     100,172,72]./256;
-            case {'matlabdefualt', 'defaultmatlab'}
+            case {'matlabdefault', 'defaultmatlab'}
                 c = [      0    0.4470    0.7410
                         0.8500    0.3250    0.0980
                         0.9290    0.6940    0.1250
@@ -107,7 +110,7 @@ function c = iwantcolor(N, Nselect, testPlot)
                             0.9059    0.1608    0.5412
                             0.4000    0.6510    0.1176
                             0.9020    0.6706    0.0078];
-            case 'alamo'
+            case 'starfishtoast'
                 c = [49,174,203;... % A blue
                     222,69,42;... % A red
                     103,191,97;... % A green
@@ -117,7 +120,7 @@ function c = iwantcolor(N, Nselect, testPlot)
                     149,110,41;... % A brown
                     243,120,45]./256; % An orange
             case 'celldensitydreadd'
-                c = iwantcolor('alamo');
+                c = iwantcolor('starfishtoast');
             case 'celldensity'
                 c = iwantcolor('matlabdefault');
             otherwise
