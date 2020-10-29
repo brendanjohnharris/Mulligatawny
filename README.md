@@ -1,2 +1,2 @@
 # Mulligatawny
-Miscellaneous functions for sanity
+Miscellaneous functions

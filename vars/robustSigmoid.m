@@ -14,6 +14,7 @@ function [y, mu, sd] = robustSigmoid(x, mu, sd, func)
     end
     if nargin < 3 || isempty(sd)
         sd = iqr(x, 1);
+        sd(sd == 0) = std(x(:, sd == 0), [], 1); % Eh
     end
     if nargin < 4 || isempty(func)
         func = 'tanh';
