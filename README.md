@@ -1,2 +1,2 @@
 # Mulligatawny
-Miscellaneous functions
+Miscellaneous Matlab functions
