@@ -4,14 +4,9 @@ function p = covEllipse(mu, sigma, varargin)
 % sqrt(Sigmas) correspond to 'radii', not 'diameters'
     if isrow(mu)
         mu = mu';
-    end
-    sigma = arrayfun(@(x) sign(x).*sqrt(abs(x)), sigma);
+    end 
     [V, D] = eig(sigma);
-    t = linspace(0, 2.*pi, 100);
-    x = D(1).*cos(t);
-    y = D(4).*sin(t);
-    %angle = acos(dot(V(:, 1), [1, 0])./norm(V(:, 1)));
-    %rot = [cos(angle), -sin(angle); sin(angle), cos(angle)];
-    X = (V./vecnorm(V))\[x; y] + mu;
-    p = fill(X(1, :), X(2, :), varargin{:});
-end
+    t = linspace(0, 2*pi);
+    X = (V * sqrt(D))*[cos(t(:))'; sin(t(:))'];
+    p = fill(X(1, :)+mu(1), X(2, :)+mu(2), varargin{:});
+end    
