@@ -1,6 +1,7 @@
-function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim)
+function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim, nums, rowLabels, colLabels)
 %PLOTDATAMAT Plot a matrix with a focus on aesthetic
-% groupdim: 1 for column grouping, 2 for row grouping
+% groupdim: 1 for column grouping, 2 for row grouping, empty for no grouping
+% NaN's will be bleck
     if nargin < 2
         normdir = [];
     end
@@ -10,6 +11,15 @@ function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim)
     if nargin < 4
         groupdim = [];
     end
+    if nargin < 5
+        nums = 0;
+    end
+    if nargin < 6
+        rowLabels = [];
+    end
+    if nargin < 7
+        colLabels = [];
+    end
     if ~isempty(groupdim)
         groupdim = -groupdim + 3;
     end
@@ -18,12 +28,13 @@ function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim)
     if ~isempty(normdir)
         datamat = zscore(datamat, [], normdir);
     end
+    hold on
     if isempty(groupdim)
-        imagesc(datamat)
+        im = imagesc(datamat);
+        im.CData(repmat(isnan(datamat), 1, 1, 3)) = 0;
         colormap(ax, customMap)
         caxis([-1, 1])
     else
-        hold on
         for i = 1:size(datamat, groupdim)
             if groupdim == 1
                 submat = datamat(i, :); % Get the ith row to plot
@@ -36,14 +47,12 @@ function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim)
             submat = round(mat2gray(submat).*100);
             colorMap = flipud(interpColors([1 1 1], customMap(i, :), 100));
             if groupdim == 1
-                image(1, i, ind2rgb(submat, colorMap))
+                im = image(1, i, ind2rgb(submat, colorMap));
             elseif groupdim == 2
-                image(i, 1, ind2rgb(submat, colorMap))
+                im = image(i, 1, ind2rgb(submat, colorMap));
             end
+            im.CData(repmat(isnan(datamat), 1, 1, 3)) = 0;
         end
-        axis tight
-        axis ij
-        hold off
     end
     if ~isempty(normdir)
         for i = 1:size(datamat, -normdir+3)
@@ -56,10 +65,32 @@ function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim)
     end
     ax.XTickLabels = {};
     ax.YTickLabels = {};
-    ax.XTick = [];
-    ax.YTick = [];
-    axis square
+    ax.XTick = 1:size(datamat, 2);
+    ax.YTick = 1:size(datamat, 1);
+    %axis square
     set(gcf, 'color', 'w')
+    axis ij
+    
+    if nums
+        y = repmat((1:size(datamat, 1))', 1, size(datamat, 2));
+        x = repmat((1:size(datamat, 1)), size(datamat, 2), 1);
+        xlim([0.5, 0.5+size(datamat, 2)])
+        tvals = compose('%.3g', datamat);
+        text(x(:), y(:), tvals(:), 'HorizontalAlignment', 'Center')
+        set(gcf, 'color', 'w')
+        ax.XAxisLocation = 'top';
+        if ~isempty(colLabels)
+            ax.XTickLabels = strrep(colLabels, '_', '\_');
+        end
+        if ~isempty(rowLabels)
+            ax.YTickLabels = strrep(rowLabels, '_', '\_');
+        end
+        ax.YLim = ax.YLim + [+0.5, -0.5];
+    end
+    
+    hold off
+    axis image
     ax.Box = 'on';
+    ax.LineWidth = 2;
 end
 
