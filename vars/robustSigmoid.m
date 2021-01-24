@@ -19,13 +19,16 @@ function [y, mu, sd] = robustSigmoid(x, mu, sd, func)
     if nargin < 4 || isempty(func)
         func = 'tanh';
     end
-    if sd == false % i.e. don't take SD from data
+    if isscalar(sd) && sd == false % i.e. don't take SD from data
         sd = 1;
     end
     if isscalar(func) && func >= 0.5
         func = 'logistic';
     elseif isscalar(func) && func == 0
         func = 'tanh';
+    end
+    if isscalar(sd)
+        sd = repmat(sd, 1, size(x, 2));
     end
         
     alreadyNaN = isnan(x);

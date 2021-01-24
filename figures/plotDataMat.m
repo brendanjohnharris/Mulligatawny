@@ -15,10 +15,20 @@ function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim, nums, rowL
         nums = 0;
     end
     if nargin < 6
-        rowLabels = [];
+        rowLabels = {};
     end
     if nargin < 7
-        colLabels = [];
+        colLabels = {};
+    end
+    rightRowLabels = [];
+    bottomColLabels = [];
+    if length(rowLabels) == 2 && iscell(rowLabels{1}) % You've given a {{leftlabels}, {rightlabels}}
+        rightRowLabels = rowLabels{2};
+        rowLabels = rowLabels{1};
+    end
+    if length(colLabels) == 2 && iscell(colLabels{1}) % You've given a {{toplabels}, {bottomlabels}}
+        bottomColLabels = colLabels{2};
+        colLabels = colLabels{1};
     end
     if ~isempty(groupdim)
         groupdim = -groupdim + 3;
@@ -92,5 +102,14 @@ function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim, nums, rowL
     axis image
     ax.Box = 'on';
     ax.LineWidth = 2;
+    
+    if ~isempty(rightRowLabels) || ~isempty(bottomColLabels) % Make the figure a bit bigger if these axes don't overlap well
+        ax = gca;
+        axes('xlim', ax.XLim, 'ylim', ax.YLim, 'color', 'none',...
+            'XTick', ax.XTick, 'YTick', ax.YTick, 'YAxisLocation', 'Right', 'YDir', 'reverse', 'XTickLabels', bottomColLabels, 'YTickLabels', rightRowLabels)
+        axis square
+        axes(ax);
+    end
+    
 end
 
