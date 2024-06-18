@@ -1,4 +1,4 @@
-function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim, nums, rowLabels, colLabels)
+function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim, nums, rowLabels, colLabels, formatspec, textdata)
 %PLOTDATAMAT Plot a matrix with a focus on aesthetic
 % groupdim: 1 for column grouping, 2 for row grouping, empty for no grouping
 % NaN's will be bleck
@@ -20,6 +20,12 @@ function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim, nums, rowL
     if nargin < 7
         colLabels = {};
     end
+    if nargin < 8 || isempty(formatspec)
+        formatspec = '%.3g';
+    end
+    if nargin < 9 || isempty(textdata)
+        textdata = datamat;
+    end
     rightRowLabels = [];
     bottomColLabels = [];
     if length(rowLabels) == 2 && iscell(rowLabels{1}) % You've given a {{leftlabels}, {rightlabels}}
@@ -30,7 +36,8 @@ function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim, nums, rowL
         bottomColLabels = colLabels{2};
         colLabels = colLabels{1};
     end
-    if ~isempty(groupdim)
+    if ~isempty(groupdim)numps = binarizedSignificant(dataHCTSA);
+
         groupdim = -groupdim + 3;
     end
     f = gcf;
@@ -40,10 +47,13 @@ function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim, nums, rowL
     end
     hold on
     if isempty(groupdim)
-        im = imagesc(datamat);
-        im.CData(repmat(isnan(datamat), 1, 1, 3)) = 0;
+        drawdata = datamat;
+        drawdata(isnan(datamat)) = 0;
+        im = imagesc(drawdata);
+        im.CData(isnan(datamat)) = 0;
         colormap(ax, customMap)
-        caxis([-1, 1])
+        axis tight
+%         caxis([-1, 1])
     else
         for i = 1:size(datamat, groupdim)
             if groupdim == 1
@@ -82,10 +92,14 @@ function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim, nums, rowL
     axis ij
     
     if nums
-        y = repmat((1:size(datamat, 1))', 1, size(datamat, 2));
-        x = repmat((1:size(datamat, 1)), size(datamat, 2), 1);
+%         y = repmat((1:size(datamat, 1))', 1, size(datamat, 2));
+%         x = repmat((1:size(datamat, 1)), size(datamat, 2), 1);
+        [x, y] = meshgrid(1:size(datamat, 2), 1:size(datamat, 1));
         xlim([0.5, 0.5+size(datamat, 2)])
-        tvals = compose('%.3g', datamat);
+        tvals = compose(formatspec, textdata);
+        if any(isnan(textdata))
+            tvals(isnan(textdata)) = {''};
+        end
         text(x(:), y(:), tvals(:), 'HorizontalAlignment', 'Center')
         set(gcf, 'color', 'w')
         ax.XAxisLocation = 'top';
