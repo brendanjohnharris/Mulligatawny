@@ -1,4 +1,4 @@
-function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim, nums, rowLabels, colLabels, formatspec)
+function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim, nums, rowLabels, colLabels, formatspec, textdata)
 %PLOTDATAMAT Plot a matrix with a focus on aesthetic
 % groupdim: 1 for column grouping, 2 for row grouping, empty for no grouping
 % NaN's will be bleck
@@ -22,6 +22,9 @@ function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim, nums, rowL
     end
     if nargin < 8 || isempty(formatspec)
         formatspec = '%.3g';
+    end
+    if nargin < 9 || isempty(textdata)
+        textdata = datamat;
     end
     rightRowLabels = [];
     bottomColLabels = [];
@@ -93,9 +96,9 @@ function [f, ax] = plotDataMat(datamat, normdir, customMap, groupdim, nums, rowL
 %         x = repmat((1:size(datamat, 1)), size(datamat, 2), 1);
         [x, y] = meshgrid(1:size(datamat, 2), 1:size(datamat, 1));
         xlim([0.5, 0.5+size(datamat, 2)])
-        tvals = compose(formatspec, datamat);
-        if any(isnan(datamat))
-            tvals(isnan(datamat)) = {''};
+        tvals = compose(formatspec, textdata);
+        if any(isnan(textdata))
+            tvals(isnan(textdata)) = {''};
         end
         text(x(:), y(:), tvals(:), 'HorizontalAlignment', 'Center')
         set(gcf, 'color', 'w')
